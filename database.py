@@ -1,11 +1,22 @@
 import psycopg2
-con = psycopg2.connect(host='localhost', database='development',
-user='bio', password='bio')
-cur = con.cursor()
+from datetime import datetime
 
-cur.execute('select * from sensors')
-recset = cur.fetchall()
-for rec in recset:
-    print (rec)
-con.close()
+def getSensorByName(name):
+    con = psycopg2.connect(host='postgres', database='raspberry_db',
+    user='raspberry_user', password='raspberry')
+    cur = con.cursor()
+    
+    cur.execute("select * from sensors where name = '" + name + "'")
+    recset = cur.fetchall()
+    con.close()
+    return recset
 
+#def setValue(sensorId, sensorValue):
+#    con = psycopg2.connect(host='postgres', database='raspberry_db',
+#    user='raspberry_user', password='raspberry')
+#    cur = con.cursor()
+#    
+#    cur.execute("insert into data_collects(data_measure, value, sensor_id) " +
+#                    "VALUES ('" + datetime.now() + "'," + sensorValue + "," + sensorId + ")")
+#    con.close()
+#

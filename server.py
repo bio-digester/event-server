@@ -2,7 +2,7 @@ import socket
 import threading
 import socketserver
 import time
-
+from database import getSensorByName
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
@@ -11,6 +11,11 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
         cur_thread = threading.current_thread()
         response = bytes("{}: {}".format(cur_thread.name, data), 'ascii')
         self.request.sendall(response)
+
+        sensor, value = data.split()
+
+        for sensor in getSensorByName(sensor):
+            print(sensor)
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
