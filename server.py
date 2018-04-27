@@ -2,20 +2,19 @@ import socket
 import threading
 import socketserver
 import time
-from database import getSensorByName
+from database import *
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
         data = str(self.request.recv(1024), 'ascii')
         cur_thread = threading.current_thread()
-        response = bytes("{}: {}".format(cur_thread.name, data), 'ascii')
-        self.request.sendall(response)
-
         sensor, value = data.split()
 
         for sensor in getSensorByName(sensor):
             print(sensor)
+        
+        setValue(sensor[0], value)
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
@@ -29,7 +28,7 @@ if __name__ == "__main__":
     server_thread = threading.Thread(target=server.serve_forever)
     server_thread.daemon = True
     server_thread.start()
-    print("Server loop running in thread:", server_thread.name)
+    print("Server running")
 
     # run the parent process indefinitely
     while True:
