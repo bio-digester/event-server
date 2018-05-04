@@ -22,9 +22,9 @@ def setValue(sensorId, sensorValue):
     cur = con.cursor()
     
     cur.execute("insert into data_collects(data_measure, value," + 
-                    " sensor_id, created_at, updated_at) " +
-                    "VALUES (%s, %s, %s, %s, %s)",(datetime.now(), sensorValue,
-                    sensorId, datetime.now(), datetime.now()))
+                    " sensor_id) " +
+                    "VALUES (%s, %s, %s)",(datetime.now(), sensorValue,
+                    sensorId))
     con.commit()
     con.close()
 
