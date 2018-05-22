@@ -3,6 +3,7 @@ import threading
 import socketserver
 import time
 from database import *
+from actuators import *
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
@@ -19,9 +20,12 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
         print('Try insert ', sensor[1])
         database.setValue(sensor[0], value)
         print('Inserted ', sensor[0], ' -- Value: ', value)
+        actuators.verify(database.getLastSensorsValues())
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
+
+actuators = Actuators()
 
 if __name__ == "__main__":
     HOST, PORT = "0.0.0.0", 6500

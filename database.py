@@ -29,3 +29,28 @@ class Database(object):
         con.commit()
         con.close()
 
+    def getBestValues(self):
+        # we can't have best table implemented
+        pass
+
+    def __getLastSensorValue(self, name):
+        sensor_id = self.getSensorByName(name)
+
+        con = self.connect()
+        cur = con.cursor()
+        cur.execute("select value from data_collects where sensor_id = " +
+            str(sensor_id[0][0]) + " order by data_measure DESC limit 1")
+        recset = cur.fetchone()
+        con.close()
+        return recset[0]
+
+    def getLastSensorsValues(self):
+        sensors = {}
+        sensors['TEMPDS'] = float(self.__getLastSensorValue('TEMPDS')) 
+        print(sensors)
+        return sensors
+
+
+
+
+
