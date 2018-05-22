@@ -7,14 +7,18 @@ from database import *
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
+        database = Database()
         data = str(self.request.recv(1024), 'ascii')
         cur_thread = threading.current_thread()
         sensor, value = data.split()
 
-        for sensor in getSensorByName(sensor):
+        print('Get sensor\'s id in database')
+        for sensor in database.getSensorByName(sensor):
             print(sensor)
         
-        setValue(sensor[0], value)
+        print('Try insert ', sensor[1])
+        database.setValue(sensor[0], value)
+        print('Inserted ', sensor[0], ' -- Value: ', value)
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
