@@ -2,29 +2,35 @@ import socket
 import threading
 import socketserver
 import time
-from database import *
 from actuators import *
+from sensors import *
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
-        database = Database()
         data = str(self.request.recv(1024), 'ascii')
         cur_thread = threading.current_thread()
         sensor, value = data.split()
 
-        print('Get sensor\'s id in database')
-        for sensor in database.getSensorByName(sensor):
-            print(sensor)
-        
-        print('Try insert ', sensor[1])
-        database.setValue(sensor[0], value)
-        print('Inserted ', sensor[0], ' -- Value: ', value)
-        actuators.verify(database.getLastSensorsValues())
+        if(sensor != 'ENTRY' and sensor != 'LEVEL'):
+            print('[server] Get sensor\'s id in database')
+            current_sensor = sensors.getSensor(sensor)
+            sensors.work(current_sensor, value)
+        else:
+            if(sensor == 'ENTRY'):
+                print('[server] Food actions')
+                current_sensor = {}        
+                current_sensor[1] = 'ENTRY'
+            else:        
+                current_sensor = sensors.getSensor(sensor)
+            sensors.work(current_sensor, value)
+            actuators.entry(sensors.sensors, current_sensor[1])
+        actuators.verify(sensors.sensors)
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
 
+sensors = Sensors()
 actuators = Actuators()
 
 if __name__ == "__main__":
