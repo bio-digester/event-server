@@ -9,10 +9,10 @@ class Actuators(object):
 
     def __send(self, port, message):
         # While don't have actuator code
-        # actuatorsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # actuatorsock.connect(('127.0.0.1', port))
-        # actuatorsock.sendall(message)
-        pass
+        actuatorsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        actuatorsock.connect(('127.0.0.1', port))
+        actuatorsock.sendall(str(message).encode())
+        # pass
 
     def verify(self, sensors):
         print("[actuators] last sensors data ", sensors)
