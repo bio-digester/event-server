@@ -21,8 +21,7 @@ class Actuators(object):
             self.__workResistence(1)
         else:
             self.__workResistence(0)
-        # 1 atm = 101.325kPa
-        if(sensors['PRESSURE'] > 101325):
+        if(sensors['PRESSURE'] < .5):
             self.__workGasPassage(1)
         else:
             self.__workGasPassage(0)
