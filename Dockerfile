@@ -1,6 +1,7 @@
 from python:3.5
 
 RUN pip3 install psycopg2
+RUN pip3 install sqlalchemy
 RUN pip install psycopg2-binary
 
 ENV  PYTHONUNBUFFERED=1
