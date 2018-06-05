@@ -21,15 +21,16 @@ class Sensor(Base):
         return "<Sensor(id='%s', name='%s', codename='%s)>" % (
                                 self.id, self.name, self.codename) 
 
-class DataCollects(Base):
+class DataCollect(Base):
 
     __tablename__ = 'data_collects'
 
     id = Column(Integer, primary_key=True)
     data_measure = Column(DateTime)
     value = Column(String(250))
-    sensor_id = Column(Integer, ForeignKey('sensor.id'))
-    
+    sensor_id = Column(Integer, ForeignKey('sensors.id'))
+    sensor = relationship(Sensor)
+ 
     def __repr__(self):
         return "<DataCollect(id='%s', data_measure='%s', value='%s', sensor=%s)>" % (
-                                self.id, self.data_measure, self.value, self.sensor_id)
+                                self.id, self.data_measure, self.value, self.sensor)
