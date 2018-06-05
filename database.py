@@ -1,35 +1,21 @@
-import psycopg2
-from datetime import datetime
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from schema import Base, Sensor, DataCollect, HOST, DATABASE, PASSWORD, USER
 
 class Database(object):
-    HOST = 'postgres'
-    DATABASE = 'raspberry_db'
-    PASSWORD = 'raspberry'
-    USER = 'raspberry_user' 
 
-    def connect(self):
-        return psycopg2.connect(host = self.HOST, database = self.DATABASE,
-                user = self.USER, password = self.PASSWORD)
+    def __init__(self):
+        self.host = 'postgres'
+        self.user = 'raspberry_user'
+        self.password = 'raspberry'
+        self.database = 'raspberry_db'
 
-    def getSensorByName(self, name):
-        con = self.connect()
-        cur = con.cursor()
-        cur.execute("select * from sensors where name = '" + name + "'")
-        recset = cur.fetchall()
-        con.close()
-        return recset
+    def _create_engine(self):
+        engine = create_engine("postgresql+psycopg2://%s:%s@%s/%s" % 
+            (self.user, self.password, self.host, self.database))
 
-    def setValue(self, sensorId, sensorValue):
-        con = self.connect()
-        cur = con.cursor()
-        cur.execute("insert into data_collects(data_measure, value," + 
-                " sensor_id) " +
-                "VALUES (%s, %s, %s)",(datetime.now(), sensorValue,
-                    sensorId))
-        con.commit()
-        con.close()
-
-    def getBestValues(self):
-        # we can't have best table implemented
-        pass
+        DBSession = sessionmaker()
+        DBSession.configure(bind = engine)
+        session = DBSession()
+        return session
 

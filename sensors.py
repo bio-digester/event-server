@@ -1,5 +1,5 @@
 import socket
-from database import *
+from models import Sensor, DataCollect
 
 class Sensors(object):
     def __init__(self):
@@ -13,18 +13,17 @@ class Sensors(object):
         self.sensors['ENTRY']['status'] = 0
         self.sensors['ENTRY']['level'] = 0
 
-    def getSensor(self, sensor):
-        database = Database()
-        return database.getSensorByName(sensor)[0] 
+    def get_sensor(self, sensor):
+        sensor_db = Sensor()
+        return sensor_db.get_sensor(sensor) 
 
     def work(self, sensor, value):
-        print("[sensors] RECEIVED: ", sensor)
-
-        database = Database()
-        if(sensor[1] != 'ENTRY'):
-            self.sensors[sensor[1]] = float(value)
-            print("[sensors] SAVING: ", sensor[0], " value: ", value)
-            database.setValue(sensor[0], value)
+        if(sensor != None):
+            self.sensors[sensor.name] = float(value)
+            print("[sensors] SAVING: ", sensor.codename, " value: ", value)
+ 
+            data_collect_db = DataCollect()
+            data_collect_db.set_value(sensor, value)
         else:
             self.sensors['ENTRY']['status'] = int(value)
             if(int(value) == 1):
