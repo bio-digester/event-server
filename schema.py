@@ -34,3 +34,20 @@ class DataCollect(Base):
     def __repr__(self):
         return "<DataCollect(id='%s', data_measure='%s', value='%s', sensor=%s)>" % (
                                 self.id, self.data_measure, self.value, self.sensor)
+
+class Notification(Base):
+    __tablename__ = 'notification'
+
+    id = Column(Integer, primary_key=True)
+    message_date = Column(DateTime)
+    message = Column(String(250))
+    
+    def __repr__(self):
+        return "<Report(id='%s', date='%s', message='%s')>" % (
+                                self.id, self.message_date, self.message)
+
+
+engine = create_engine("postgresql+psycopg2://raspberry_user:raspberry@postgres/raspberry_db") 
+Base.metadata.create_all(engine)
+
+
