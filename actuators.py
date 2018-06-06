@@ -28,32 +28,32 @@ class Actuators(object):
 
 
     def entry(self, sensors, current):
-        if(current == 'LEVEL' and sensors['ENTRY']['status'] == 0 and
-            sensors['ENTRY']['level'] != 0 and self.mixer == 0):
-            total_water = sensors['LEVEL'] - sensors['ENTRY']['level']
-            print("[actuators] Sending water value: ", total_water)
-            self.__send(6553, total_water)
-            sensors['ENTRY']['level'] = 0
-        elif(current == 'ENTRY'):
+        if(current == None):
             if(sensors['ENTRY']['status'] == 1):
                 self.mixer = 1
                 print("[actuators] Turn on mixer")
-                self.__send(6551, 1) # turn on mixer
+                ## self.__send(6551, 1) # turn on mixer
             else:
                 self.__workWater(sensors)
+        elif(current.name == 'LEVEL' and sensors['ENTRY']['status'] == 0 and
+            sensors['ENTRY']['level'] != 0 and self.mixer == 0):
+            total_water = sensors['LEVEL'] - sensors['ENTRY']['level']
+            print("[actuators] Sending water value: ", total_water)
+            ## self.__send(6553, total_water)
+            sensors['ENTRY']['level'] = 0
 
     def __workResistence(self, status):
         if(status != self.resistence):
             # send change to actuator code 
             print("[actuators] Changing Resistence to ", status)    
-            self.__send(6550, status)
+            ## self.__send(6550, status)
             self.resistence = status
 
     def __workWater(self, sensors):
             # Turn off mixer
             time.sleep(5)
             print("[actuators] Turn off mixer")
-            self.__send(6551, 0) # turn off mixer
+            ## self.__send(6551, 0) # turn off mixer
             self.mixer = 0
 
     def __workGasPassage(self, status):
