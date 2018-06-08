@@ -1,7 +1,8 @@
 import socket
-from models import Sensor, DataCollect
+from models import Sensor, DataCollect, Notification
 
 class Sensors(object):
+
     def __init__(self):
         self.sensors = {}
         self.sensors['TEMPDS'] = 0
@@ -24,7 +25,24 @@ class Sensors(object):
  
             data_collect_db = DataCollect()
             data_collect_db.set_value(sensor, value)
+            self.__notification()
         else:
             self.sensors['ENTRY']['status'] = int(value)
             if(int(value) == 1):
                 self.sensors['ENTRY']['level'] = self.sensors['LEVEL']
+
+    def __notification(self):
+        notification = Notification()
+        if(self.sensors['LEVEL'] < notification.MIN_LEVEL):
+            notification.send_message('O nível de alimentação está abaixo do mínimo')
+        elif(self.sensors['LEVEL'] > notification.MAX_LEVEL):            
+            notification.send_message('O nível de alimentação está no limite, retire o biofertilizante')
+        if(self.sensors['PRESSURE'] > notification.SEC_PRESSURE and
+            self.sensors['PRESSURE'] < notification.WARNING_PRESSURE):
+            notification.send_message('O biogás está pronto para ser retirado')
+        elif(self.sensors['PRESSURE'] > notification.WARNING_PRESSURE):            
+            notification.send_message('Retire urgentemente o biogás')
+
+        print(notification.all())            
+        
+
