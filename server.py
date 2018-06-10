@@ -12,6 +12,8 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
         cur_thread = threading.current_thread()
         if(len(data) < 3):
             return
+        print("#####>>> ", data)
+
         sensor, value = data.split()
 
         if(sensor != 'ENTRY' and sensor != 'LEVEL'):
@@ -26,7 +28,7 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
                 current_sensor = sensors.get_sensor(sensor)
             sensors.work(current_sensor, value)
             actuators.entry(sensors.sensors, current_sensor)
-        ## actuators.verify(sensors.sensors)
+        actuators.verify(sensors.sensors)
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
