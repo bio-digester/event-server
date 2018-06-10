@@ -21,6 +21,8 @@ class Sensors(object):
     def work(self, sensor, value):
         if(sensor != None):
             self.sensors[sensor.name] = float(value)
+            if(sensor.name == 'LEVEL'):
+                value = float(value) * 1000
             print("[sensors] SAVING: ", sensor.codename, " value: ", value)
  
             data_collect_db = DataCollect()
