@@ -21,16 +21,24 @@ class Actuators(object):
         print("[actuators] last sensors data ", sensors)
         # temperature
         if(sensors['TEMPDS'] < 30):
+            pass
             self.__workResistence(1)
         else:
+            pass
             self.__workResistence(0)
-        if(sensors['PRESSURE'] < .5):
-            self.__workGasPassage(1)
-        else:
-            self.__workGasPassage(0)
+        if(sensors['REMOVE'] == 0):
+            if(sensors['PRESSURE'] > 2):
+                pass
+                self.__workGasPassage(1)
+            else:
+                pass
+                self.__workGasPassage(0, sensors)
         if(sensors['LEVEL'] < notification.MIN_LEVEL):
             pass
-            # self.__send(6553, notification.MIN_LEVEL - sensors['LEVEL'])
+            self.__send(6553, '-1')
+        else:
+            pass
+            self.__send(6553, '0')
 
     def entry(self, sensors, current):
         if(current == None):
@@ -50,21 +58,22 @@ class Actuators(object):
     def __workResistence(self, status):
         if(status != self.resistence):
             # send change to actuator code 
-            print("[actuators] Changing Resistence to ", status)    
+            print("[actuators] Changing Resistence and mixer to ", status)    
             self.__send(6550, status)
+            self.__send(6551, status)
             self.resistence = status
 
-    def __workWater(self, sensors):
+    def __workWater(self):
             # Turn off mixer
             time.sleep(5)
             print("[actuators] Turn off mixer")
             self.__send(6551, 0) # turn off mixer
             self.mixer = 0
 
-    def __workGasPassage(self, status):
+    def __workGasPassage(self, status, sensors):
         if(status != self.gas_passage):
             # send change to actuator code 
-            print("[actuators] Changing gás passage to ", status)    
+            print("[actuators] Changing gás passage to ", status)
             self.__send(6552, status)
             self.gas_passage = status
 

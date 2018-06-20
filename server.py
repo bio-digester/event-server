@@ -16,7 +16,9 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
         sensor, value = data.split()
 
-        if(sensor != 'ENTRY' and sensor != 'LEVEL'):
+        if(sensor == 'REMOVE'):
+            sensors.gas(value)
+        elif(sensor != 'ENTRY' and sensor != 'LEVEL'):
             print('[server] Get sensor\'s id in database')
             current_sensor = sensors.get_sensor(sensor)
             sensors.work(current_sensor, value)

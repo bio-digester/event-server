@@ -35,10 +35,9 @@ class Notification(Database):
     
     def __init__(self):
         super().__init__()
-        self.MIN_LEVEL = 5000
-        self.MAX_LEVEL = 40000
-        self.SEC_PRESSURE = 10
-        self.WARNING_PRESSURE = 20
+        self.MIN_LEVEL = 8421
+        self.MAX_LEVEL = 22000
+        # self.WARNING_PRESSURE = ??
 
     def send_message(self, msg):
         notification = NotificationSchema(message_date=datetime.now(), message=msg)

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -41,7 +41,7 @@ class Notification(Base):
     id = Column(Integer, primary_key=True)
     message_date = Column(DateTime)
     message = Column(String(250))
-    
+    visualized = Column(Boolean)    
     def __repr__(self):
         return "<Report(id='%s', date='%s', message='%s')>" % (
                                 self.id, self.message_date, self.message)
