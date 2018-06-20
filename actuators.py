@@ -1,5 +1,6 @@
 import socket
 import time
+from models import Notification
 from database import *
 
 class Actuators(object):
@@ -15,6 +16,7 @@ class Actuators(object):
         actuatorsock.sendall(str(message).encode())
 
     def verify(self, sensors):
+        notification = Notification()
         print("MIXER: ", self.mixer)
         print("[actuators] last sensors data ", sensors)
         # temperature
@@ -26,7 +28,9 @@ class Actuators(object):
             self.__workGasPassage(1)
         else:
             self.__workGasPassage(0)
-
+        if(sensors['LEVEL'] < notification.MIN_LEVEL):
+            pass
+            # self.__send(6553, notification.MIN_LEVEL - sensors['LEVEL'])
 
     def entry(self, sensors, current):
         if(current == None):
