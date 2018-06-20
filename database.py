@@ -9,13 +9,17 @@ class Database(object):
         self.user = 'raspberry_user'
         self.password = 'raspberry'
         self.database = 'raspberry_db'
+        self.engine = None
 
     def _create_engine(self):
-        engine = create_engine("postgresql+psycopg2://%s:%s@%s/%s" % 
+        self.engine = create_engine("postgresql+psycopg2://%s:%s@%s/%s" % 
             (self.user, self.password, self.host, self.database))
 
         DBSession = sessionmaker()
-        DBSession.configure(bind = engine)
+        DBSession.configure(bind = self.engine)
         session = DBSession()
         return session
 
+    def _dispose(self):
+        self.engine.dispose()
+        

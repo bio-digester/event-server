@@ -14,6 +14,7 @@ class Sensor(Database):
         session = self._create_engine()
         sensor = session.query(SensorSchema).filter(SensorSchema.name == name).one()
         session.close()
+        self._dispose()
         return sensor 
 
 class DataCollect(Database):
@@ -28,6 +29,7 @@ class DataCollect(Database):
         session.add(data_collect)
         session.commit()
         session.close()
+        self._dispose()
 
 class Notification(Database):       
     
@@ -44,9 +46,11 @@ class Notification(Database):
         session.add(notification)
         session.commit()
         session.close()
+        self._dispose()
 
     def all(self):
         session = self._create_engine()
         notifications = session.query(NotificationSchema).all() 
         session.close()
+        self._dispose()
         return notifications
