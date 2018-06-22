@@ -53,13 +53,13 @@ if __name__ == "__main__":
     SECURITY_HOST, SECURITY_PORT1, SECURITY_PORT2 = "127.0.0.1", 7000, 7001
     while True:
 
-        # security 1 pulse
-        security_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        security_tcp.connect((SECURITY_HOST, SECURITY_PORT1))
-        security_tcp.sendall(b'SERVER')
-
-        # security 2 pulse
-        security_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        security_tcp.connect((SECURITY_HOST, SECURITY_PORT1))
-        security_tcp.sendall(b'SERVER')
+#        # security 1 pulse
+#        security_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#        security_tcp.connect((SECURITY_HOST, SECURITY_PORT1))
+#        security_tcp.sendall(b'SERVER')
+#
+#        # security 2 pulse
+#        security_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#        security_tcp.connect((SECURITY_HOST, SECURITY_PORT1))
+#        security_tcp.sendall(b'SERVER')
         time.sleep(5)

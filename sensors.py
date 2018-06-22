@@ -14,6 +14,7 @@ class Sensors(object):
         self.sensors['ENTRY']['status'] = 0
         self.sensors['ENTRY']['level'] = 0
         self.sensors['REMOVE'] = 0
+        self.sensors['DIFFERENCE'] = 0
 
     def get_sensor(self, sensor):
         sensor_db = Sensor()
@@ -43,7 +44,5 @@ class Sensors(object):
             notification.send_message('[WARNING] O nível de alimentação está abaixo do mínimo')
         elif(self.sensors['LEVEL'] > notification.MAX_LEVEL):            
             notification.send_message('[WARNING] O nível de alimentação está no limite, retire o biofertilizante')
-
-        print(notification.all())            
-        
-
+        if(self.sensors['PRESSURE'] >= notification.MAX_PRESSURE):
+            notification.send_message('[WARNING] Retire o Biogás')

@@ -1,6 +1,6 @@
 import socket
 import time
-from models import Notification
+from models import Notification, Optimization
 from database import *
 
 class Actuators(object):
@@ -17,27 +17,28 @@ class Actuators(object):
 
     def verify(self, sensors):
         notification = Notification()
+        optimization = Optimization()
         print("MIXER: ", self.mixer)
         print("[actuators] last sensors data ", sensors)
         # temperature
-        if(sensors['TEMPDS'] < 30):
-            pass
+
+        best = optimization.get_best(sensors)
+        optimization = 30
+        if(not(best is None)):
+            optimization = int(best.temperature)
+
+        if(sensors['TEMPDS'] < optimization):
             self.__workResistence(1)
         else:
-            pass
             self.__workResistence(0)
-        if(sensors['REMOVE'] == 0):
-            if(sensors['PRESSURE'] > 2):
-                pass
+        if(str(sensors['REMOVE']) == '0'):
+            if(sensors['DIFFERENCE'] > 2):
                 self.__workGasPassage(1)
             else:
-                pass
-                self.__workGasPassage(0, sensors)
+                self.__workGasPassage(0)
         if(sensors['LEVEL'] < notification.MIN_LEVEL):
-            pass
             self.__send(6553, '-1')
         else:
-            pass
             self.__send(6553, '0')
 
     def entry(self, sensors, current):
@@ -70,7 +71,7 @@ class Actuators(object):
             self.__send(6551, 0) # turn off mixer
             self.mixer = 0
 
-    def __workGasPassage(self, status, sensors):
+    def __workGasPassage(self, status):
         if(status != self.gas_passage):
             # send change to actuator code 
             print("[actuators] Changing gás passage to ", status)

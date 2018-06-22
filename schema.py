@@ -46,8 +46,15 @@ class Notification(Base):
         return "<Report(id='%s', date='%s', message='%s')>" % (
                                 self.id, self.message_date, self.message)
 
+class Optimization(Base):
+    __tablename__ = 'optimizations'
+
+    id = Column(Integer, primary_key=True)
+    temperature = Column(String(30))
+    internal_pressure = Column(String(30))
+    ph = Column(String(30))
+    volume = Column(String(30))
+    prediction = Column(Integer)
 
 engine = create_engine("postgresql+psycopg2://raspberry_user:raspberry@postgres/raspberry_db") 
 Base.metadata.create_all(engine)
-
-

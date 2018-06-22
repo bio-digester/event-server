@@ -1,8 +1,10 @@
 from datetime import datetime
 from database import Database
+from sqlalchemy import desc
 from schema import Sensor as SensorSchema
 from schema import DataCollect as DataCollectSchema
 from schema import Notification as NotificationSchema
+from schema import Optimization as OptimizationSchema
 
 
 class Sensor(Database):
@@ -37,7 +39,7 @@ class Notification(Database):
         super().__init__()
         self.MIN_LEVEL = 8421
         self.MAX_LEVEL = 22000
-        # self.WARNING_PRESSURE = ??
+        self.MAX_PRESSURE = 48
 
     def send_message(self, msg):
         notification = NotificationSchema(message_date=datetime.now(), message=msg)
@@ -53,3 +55,22 @@ class Notification(Database):
         session.close()
         self._dispose()
         return notifications
+
+class Optimization(Database):
+
+    def __init__(self):
+        super().__init__()
+
+    def get_best(self, sensors):
+        session = self._create_engine()
+        query = session.query(OptimizationSchema).\
+                        filter(OptimizationSchema.internal_pressure == str(sensors['PRESSURE'])).\
+                        filter(OptimizationSchema.ph == str(sensors['PH'])).\
+                        filter(OptimizationSchema.volume == str(sensors['LEVEL']/1000)).\
+                        order_by(desc(OptimizationSchema.prediction)).first() 
+        session.close()
+        self._dispose()
+        return query
+
+        
+
